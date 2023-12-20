@@ -15,6 +15,7 @@ public class AnsLesson07_02_01 {
 		for(char c : s_array) {
 			letters[c]++;
 		}
+		
 		/**
 		 *for(char c : s_array) ループの中で、文字列 s 内の各文字に対して、
 		 *それぞれの文字が出現する回数を letters 配列に記録しています。
