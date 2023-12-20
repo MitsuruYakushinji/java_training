@@ -6,7 +6,7 @@ public class Lesson07_01 {
         System.out.println(isUniqueChars(str));
 	}
 
-	private static boolean isUniqueChars(String str) {
+	public static boolean isUniqueChars(String str) {
 		
 		char[] charArray = str.toCharArray();
 		
