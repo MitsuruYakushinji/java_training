@@ -18,10 +18,44 @@ public class HighAndLowGame {
 		this.deckSetCount = deckSetCount;
 	}
 
-	public void execute() {
+	public int execute() {
 		List<Integer> cardList = new ArrayList<Integer>();
-		cardList = getCard(cardList);
-		System.out.println(cardList);
+		
+		cardList = this.getCard(cardList);
+		while (true) {
+			if (this.earnedCoinCount > this.maxWinCoin) {
+				return this.earnedCoinCount;
+			}
+			System.out.println("Your WinCoin is " + this.earnedCoinCount);
+
+			// 選択肢の入力を受け付ける(y:yes / n:no)
+			while (true) {
+				System.out.print("Playing High And Low ? y / n >>");
+				String startValue = GameUtils.getInputString();
+				if (startValue.equals("n")) {
+					return this.earnedCoinCount;
+				} else if (startValue.equals("y")) {
+					break;
+				} else {
+					System.out.println("Input error...Please retype!");
+				}
+			}
+
+			System.out.print("High or Low ? h / l >>");
+			String userChoice = GameUtils.getInputString();
+			cardList = this.getCard(cardList);
+			boolean isWinner = judgeCard(cardList, userChoice.equals("h"));
+			if (isWinner) {
+				this.earnedCoinCount *= 2;
+			} else {
+				this.earnedCoinCount = 0;
+			}
+
+			if (earnedCoinCount == 0) {
+				return this.earnedCoinCount;
+			}
+			System.out.println("You got " + earnedCoinCount + "Coin !!");
+		}
 	}
 
 	private List<Integer> getCard(List<Integer> cardList) {
@@ -33,11 +67,11 @@ public class HighAndLowGame {
 		for (int i = 0; i < this.deckSetCount; i++) {
 			setDeck.add(i, onePair);
 		}
-		
+
 		int cardA; // 選ばれたカードの数字
-		
+
 		// カードを１枚選ぶ
-		while(true) {
+		while (true) {
 			/**
 			 * 2.カードを1枚選出する
 			 * 2-1. 1～10までの数字を1つランダムに選出する
@@ -46,10 +80,10 @@ public class HighAndLowGame {
 			int randNumA1 = GameUtils.getRandomInt(2); // 0または1をランダムに選ぶ
 			int randNumA2 = GameUtils.getRandomInt(10);
 			cardA = setDeck.get(randNumA1).get(randNumA2);
-			
+
 			int count = 0;
-			for(int value : cardList) {
-				if(cardA == value) {
+			for (int value : cardList) {
+				if (cardA == value) {
 					count++;
 				}
 			}
@@ -72,5 +106,22 @@ public class HighAndLowGame {
 		System.out.println("pick card --" + showValue + "--");
 		// cardListを返却
 		return cardList;
+	}
+
+	private boolean judgeCard(List<Integer> cardList, boolean pickChoice) {
+		int lastCard = cardList.get(cardList.size() - 1); // cardListの最後の数字
+		int penultimateCard = cardList.get(cardList.size() - 2); // cardListの最後から2番目の数字
+
+		// 結果の判定
+		if (lastCard == penultimateCard) {
+			return false; //負け
+		}
+
+		boolean flg = (lastCard > penultimateCard) ? true : false;
+
+		if (pickChoice == flg) {
+			return true;
+		}
+		return false;
 	}
 }
