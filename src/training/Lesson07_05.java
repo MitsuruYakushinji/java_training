@@ -79,6 +79,11 @@ class ListOfString{
 	public boolean isMatch(String cha) {
 		return Pattern.matches(pattern, cha);
 	}
+	
+	// 正解データと予測データの比較(実行メソッド)
+	public void excute() {
+		System.out.println();
+	}
 }
 
 class NotMatchException extends Exception{
