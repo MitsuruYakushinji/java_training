@@ -13,68 +13,67 @@ public class CardPickGame {
 		this.possessionCoin = possessionCoin;
 	}
 
-	public void execute() {
+	public int execute() {
 		while (true) {
-			if (possessionCoin <= 0) {
-				System.out.println(this.possessionCoin);
-				break;
-			}
-
-			System.out.println("You have " + possessionCoin + "Coin, Start the game? y / n");
-			// y / n 判定用
-			String inputString = GameUtils.getInputString();
-			// 現在のベット上限枚数
-			int currentMaxBetCoin = 0;
-			// 希望ベット枚数
-			int inputCoin = 0;
-			// 実際のベット枚数
-			int betCoin = 0;
-
-			if (inputString.equals("y")) {
-				// ベット上限枚数より所持枚数が多い
-				if (possessionCoin >= maxBetCoin) {
-					// 通常のベット上限枚数
-					currentMaxBetCoin = maxBetCoin;
-					System.out.println("Please bet Coin 1 ～ " + currentMaxBetCoin);
-
-				} else {
-					// ベット上限枚数が現在の所持コイン枚数に
-					currentMaxBetCoin = possessionCoin;
-					System.out.println("Please bet Coin 1 ～ " + currentMaxBetCoin);
-
-				}
-
-			} else if (inputString.equals("n")) {
-				System.out.println(this.possessionCoin);
-				break;
-			} else {
-				// 最初から
-				System.out.println("Please enter y or n.");
-				execute();
+			if (possessionCoin == 0) {
+				return this.possessionCoin;
 			}
 
 			while (true) {
-				// ベットコインの入力
-				inputCoin = GameUtils.getInputInt();
+				System.out.println("You have " + possessionCoin + "Coin, Start the game? y / n");
+				// y / n 判定用
+				String startValue = GameUtils.getInputString();
 
-				if (inputCoin > 0 && inputCoin <= currentMaxBetCoin) {
-					// ベット枚数の確定
-					betCoin = possessionCoin - inputCoin;
+				if (startValue.equals("y")) {
+					break;
+				} else if (startValue.equals("n")) {
+					return this.possessionCoin;
+				} else {
+					System.out.println("Please enter y or n.");
+				}
+			}
+
+			int ableBetCoin = Math.min(this.maxBetCoin, this.possessionCoin);
+			System.out.println("Please bet Coin 1 ~ " + ableBetCoin);
+
+			int userBetCoin = 0;
+			while (true) {
+				// ベットコインの入力
+				userBetCoin = GameUtils.getInputInt();
+
+				if (userBetCoin > 0 && userBetCoin <= ableBetCoin) {
 					break;
 				}
 			}
 
-			// 勝敗判定
-			boolean gameResult = judgeCard(getCard());
+			this.possessionCoin -= userBetCoin;
 
-			if (gameResult) {
-				betCoin *= 2;
-				possessionCoin += betCoin;
-				System.out.println("You Win! Get " + betCoin + "Coin!");
-				System.out.println("You got " + betCoin + "Coin !!");
-			} else {
+			// カード結果の取得
+			int userCard = this.getCard();
+
+			// 勝敗判定
+			boolean isWinner = this.judgeCard(userCard);
+			int getCoin = 0;
+
+			if (isWinner) {
+				getCoin = userBetCoin * 2;
+				System.out.println("You Win! Get " + getCoin + "Coin!");
+				
+				HighAndLowGame highAndLowGame = new HighAndLowGame(getCoin, this.deckSetCount);
+				
+				getCoin =  highAndLowGame.execute();
+				
+				this.possessionCoin += getCoin;
+				// System.out.println("You got " + getCoint + "Coin !!");
+			}
+
+			if (getCoin == 0) {
 				System.out.println("You lose");
 			}
+			if (getCoin >= 1) {
+				System.out.println("You got " + getCoin + "Coin !!");
+			}
+			// 7. 「1. 現在の所持コイン枚数を確認する」の処理に戻る
 		}
 	}
 
@@ -118,12 +117,7 @@ public class CardPickGame {
 	}
 
 	private boolean judgeCard(int getCardResult) {
-
-		if (getCardResult >= 11) {
-			return true;
-		} else {
-			return false;
-		}
+		return (getCardResult >= 11) ? true : false;
 	}
 
 }
