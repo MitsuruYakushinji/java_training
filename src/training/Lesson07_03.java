@@ -4,7 +4,14 @@ public class Lesson07_03 {
 	public static void main(String[] args) {
 		String str1 = "waterbottle";
 		String str2 = "erbottlewat";
+//		String str3 = "abCdefg";
+//		String str4 = "Cdefgab";
+//		String str5 = "bananafish";
+//		String str6 = "fishbanana";
+
 		System.out.println(isRotation(str1, str2));
+//		System.out.println(isRotation(str3, str4));
+//		System.out.println(isRotation(str5, str6));
 	}
 
 	/**
@@ -17,8 +24,8 @@ public class Lesson07_03 {
 		return s1.matches(".*" + s2 + ".*$");
 	}
 	
-	private static boolean isRotation(String s, String t) {
-		
-		return true;
+	public static boolean isRotation(String s, String t) {
+		String doubleS = s + s;
+		return isSubstring(doubleS, t);
 	}
 }
