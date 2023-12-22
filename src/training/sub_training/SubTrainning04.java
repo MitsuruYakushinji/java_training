@@ -1,4 +1,4 @@
-package training;
+package training.sub_training;
 
 public class SubTrainning04 {
 

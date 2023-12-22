@@ -1,4 +1,4 @@
-package training.example;
+package training.lesson07;
 
 import java.io.BufferedReader;
 import java.io.IOException;

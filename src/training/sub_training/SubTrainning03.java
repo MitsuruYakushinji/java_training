@@ -1,4 +1,4 @@
-package training;
+package training.sub_training;
 
 import java.io.BufferedReader;
 import java.io.IOException;

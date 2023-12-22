@@ -1,4 +1,4 @@
-package training.example;
+package training.lesson07;
 
 public class Lesson07_05 {
 

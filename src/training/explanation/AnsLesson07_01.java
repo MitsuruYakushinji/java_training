@@ -1,4 +1,4 @@
-package training;
+package training.explanation;
 
 public class AnsLesson07_01 {
 	public static void main(String[] args) {
