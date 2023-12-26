@@ -14,7 +14,7 @@ public class ATM {
 	// 残高
 //	private int balance = 0;
 	// ユーザー情報
-	private Map<String, Integer> user = new HashMap<String, Integer>();
+	private Map<String, String> user = new HashMap<String, String>();
 
 	private static final int MIN_DEPOSIT_AMOUNT = 1; // 預け入れ下限 1 円
 	private static final int MAX_DEPOSIT_AMOUNT = 2000000; // 預け入れ上限 200 万円
@@ -31,13 +31,28 @@ public class ATM {
 		menu.put(4, "終了");
 	}
 	
-	// ユーザー情報のget;set;アクセサー
-	public Map<String, Integer> getUser(){
-		return this.user;
-	}
-	public void setUser(String name, Integer balance) {
-		this.user.put(name, balance);
-	}
+//	// ユーザー情報のget;アクセサー(name : key)
+//	public String getUserKey(Map<String, Integer> user){
+//		String name = null;
+//		for(Map.Entry<String, Integer> entry : user.entrySet()) {
+//			name = entry.getKey();
+//		}
+//		return name;
+//	}
+//	
+//	// ユーザー情報のget;アクセサー(balance : value)
+//	public Integer getUserValue(Map<String, Integer> user){
+//		Integer balance = 0;
+//		for(Map.Entry<String, Integer> entry : user.entrySet()) {
+//			balance = entry.getValue();
+//		}
+//		return balance;
+//	}
+//	
+//	// ユーザー情報のset;アクセサー
+//	public void setUser(String name, Integer balance) {
+//		this.user.put(name, balance);
+//	}
 
 	// メニュー表示
 	private void showMenu(Map<Integer, String> menu) {
@@ -45,7 +60,7 @@ public class ATM {
 		System.out.println();
 	}
 
-	// メニュー番号入力
+	// メニュー番号入力(ATM)
 	private int inputMenu(Map<Integer, String> menu) {
 		while (true) {
 			this.showMenu(menu);
@@ -72,13 +87,15 @@ public class ATM {
 	}
 
 	// メニュー選択
-	public void selectMenu() {
+	public Map<String, String> selectMenu() {
+		// メッセージ表示
+		System.out.println(this.user.get("name") + "様ようこそ");
 		boolean isFinished = true;
 		while (isFinished) {
 			int inputMenu = this.inputMenu(menu);
 			switch (inputMenu) {
 			case 1:
-				this.deposit();
+				this.ansDeposit();
 				break;
 			case 2:
 				this.withdrawal();
@@ -92,37 +109,41 @@ public class ATM {
 				break;
 			}
 		}
+		return this.user;
 	}
 
 	// 残高照会
 	private void balanceInquiry() {
-		for
-		System.out.println("残高は " + null + " 円です");
+		System.out.println("残高は " + this.user.get("balance") + " 円です");
 	}
 
 	// 預け入れ
-	private void deposit() {
-		System.out.println("ご入金額を入力して下さい");
-		System.out.print(">>");
-		try {
-			int dep = Integer.parseInt(BR.readLine());
-			if (dep >= 1 && dep <= 2000000) {
-				this.balance += dep;
-				System.out.println(dep + " 円お預かりしました");
-			} else {
-				throw new IOException();
-			}
-		} catch (NumberFormatException e) {
-			System.out.println("1 円から 200 万円以内で入力してください");
-			this.deposit();
-		} catch (IOException e) {
-			System.out.println("1 円から 200 万円以内で入力してください");
-			this.deposit();
-		}
-	}
+//	private void deposit() {
+//		System.out.println("ご入金額を入力して下さい");
+//		System.out.print(">>");
+//		Integer balance = this.getUserValue(this.user); // ユーザーの今の口座残高
+//		try {
+//			int dep = Integer.parseInt(BR.readLine());
+//			if (dep >= 1 && dep <= 2000000) {
+//				balance += dep;
+//				user.put(this.getUserKey(this.user), balance); // 更新した口座残高を同じユーザーで再格納
+//				System.out.println(dep + " 円お預かりしました");
+//			} else {
+//				throw new IOException();
+//			}
+//		} catch (NumberFormatException e) {
+//			System.out.println("1 円から 200 万円以内で入力してください");
+//			this.deposit();
+//		} catch (IOException e) {
+//			System.out.println("1 円から 200 万円以内で入力してください");
+//			this.deposit();
+//		}
+//	}
 	
 	// 引き出し
 	private void withdrawal() {
+//		Integer balance = this.getUserValue(this.user); // ユーザーの今の口座残高
+		int balance = Integer.parseInt(this.user.get("balance"));
 		if(balance <= 0) {
 			System.out.println("残高がありません");
 			return;
@@ -136,17 +157,22 @@ public class ATM {
 				+ (MAX_WITHDRAWAL_AMOUNT / 10000) + " 万円以内で入力してください");
 				continue;
 			}
-			if(amount <= this.balance) {
+			if(amount <= balance) {
 				break;
 			}
 			System.out.println("残高が不足しています、残高は " + balance +" 円です");
 		}
-		this.balance -= amount;
+//		balance -= amount;
+//		user.put(this.getUserKey(this.user), balance); // 更新した口座残高を同じユーザーで再格納
+
 		System.out.println(amount + " 円お返ししました");
+		
+		this.user.replace("balance", String.valueOf(balance - amount));
 	}
 
 	// 預け入れ(解答)
 	private void ansDeposit() {
+//		Integer balance = this.getUserValue(this.user); // ユーザーの今の口座残高
 		int amount = -1;
 		while (true) {
 			System.out.println("ご入金額を入力してください");
@@ -157,7 +183,35 @@ public class ATM {
 			System.out.println(MIN_DEPOSIT_AMOUNT + " 円から "
 					+ (MAX_DEPOSIT_AMOUNT / 10000) + " 万円以内で入力してください");
 		}
-		this.balance += amount;
+//		balance += amount;
+//		user.put(this.getUserKey(this.user), balance); // 更新した口座残高を同じユーザーで再格納
+//		System.out.println(amount + " 円お預かりしました");
+		
+		// userのbalanceを修正するがString型なのでintで計算してまたStringに戻してから格納する
+		this.user.replace("balance", String.valueOf(Integer.parseInt(this.user.get("balance")) + amount));
 		System.out.println(amount + " 円お預かりしました");
 	}
+	
+	// ユーザー情報セット
+	public void setUser(Map<String, String> user) {
+		this.user = user;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
